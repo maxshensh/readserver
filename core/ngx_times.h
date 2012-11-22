@@ -12,10 +12,11 @@
 #include <ngx_core.h>
 
 
+// 自己定义的时间结构
 typedef struct {
-    time_t      sec;
-    ngx_uint_t  msec;
-    ngx_int_t   gmtoff;
+    time_t      sec; // 秒
+    ngx_uint_t  msec;// 毫秒
+    ngx_int_t   gmtoff;// gmt时间差距
 } ngx_time_t;
 
 

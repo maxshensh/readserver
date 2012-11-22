@@ -56,7 +56,9 @@ void
 ngx_time_init(void)
 {
     ngx_cached_err_log_time.len = sizeof("1970/09/28 12:00:00") - 1;
+    // err_log 设置
     ngx_cached_http_time.len = sizeof("Mon, 28 Sep 1970 06:00:00 GMT") - 1;
+    //
     ngx_cached_http_log_time.len = sizeof("28/Sep/1970:12:00:00 +0600") - 1;
 
     ngx_cached_time = &cached_time[0];
@@ -76,10 +78,11 @@ ngx_time_update(void)
     struct timeval   tv;
 
     if (!ngx_trylock(&ngx_time_lock)) {
-        return;
+        return; // 如果失败 该如何处理
     }
 
     ngx_gettimeofday(&tv);
+
 
     sec = tv.tv_sec;
     msec = tv.tv_usec / 1000;

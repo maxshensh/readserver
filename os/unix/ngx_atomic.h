@@ -105,6 +105,8 @@ typedef volatile ngx_atomic_uint_t  ngx_atomic_t;
 
 #define ngx_atomic_cmp_set(lock, old, set)                                    \
     __sync_bool_compare_and_swap(lock, old, set)
+// 测试 原子操作
+
 
 #define ngx_atomic_fetch_add(value, add)                                      \
     __sync_fetch_and_add(value, add)

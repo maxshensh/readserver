@@ -203,7 +203,7 @@ main(int argc, char *const *argv)
     ngx_cycle_t      *cycle, init_cycle;
     ngx_core_conf_t  *ccf;
 
-    if (ngx_get_options(argc, argv) != NGX_OK) {
+    if (ngx_get_options(argc, argv) != NGX_OK) {// 如果不成功
         return 1;
     }
 
@@ -658,7 +658,8 @@ ngx_get_options(int argc, char *const *argv)
     u_char     *p;
     ngx_int_t   i;
 
-    //
+    //遍历参数
+    // 一个小巧 但是没太多技巧的遍历
     for (i = 1; i < argc; i++) {
 
         p = (u_char *) argv[i];
