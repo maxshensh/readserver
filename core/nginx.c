@@ -268,9 +268,9 @@ main(int argc, char *const *argv)
     ngx_regex_init();
 #endif
 
-    ngx_pid = ngx_getpid();
+    ngx_pid = ngx_getpid();//拿到pid
 
-    log = ngx_log_init(ngx_prefix);
+    log = ngx_log_init(ngx_prefix);//初始化日至，
     if (log == NULL) {
         return 1;
     }

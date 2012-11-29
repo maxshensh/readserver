@@ -11,7 +11,7 @@
 #include <ngx_setproctitle.h>
 
 
-typedef pid_t       ngx_pid_t;
+typedef pid_t       ngx_pid_t; // ngx_pid 来替代
 
 #define NGX_INVALID_PID  -1
 

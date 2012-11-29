@@ -126,7 +126,7 @@ ngx_time_update(void)
 #elif (NGX_HAVE_GMTOFF)
 
     ngx_localtime(sec, &tm);
-    cached_gmtoff = (ngx_int_t) (tm.ngx_tm_gmtoff / 60);
+    cached_gmtoff = (ngx_int_t) (tm.ngx_tm_gmtoff / 60);//获得和gmt 时间差
     tp->gmtoff = cached_gmtoff;
 
 #else

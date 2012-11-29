@@ -53,7 +53,7 @@ ngx_timezone_update(void)
 
 
 void
-ngx_localtime(time_t s, ngx_tm_t *tm)
+ngx_localtime(time_t s, ngx_tm_t *tm) // 通过描述 设置tm
 {
 #if (NGX_HAVE_LOCALTIME_R)
     (void) localtime_r(&s, tm);
