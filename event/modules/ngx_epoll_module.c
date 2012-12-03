@@ -90,7 +90,9 @@ typedef struct {
 
 
 static ngx_int_t ngx_epoll_init(ngx_cycle_t *cycle, ngx_msec_t timer);
+
 static void ngx_epoll_done(ngx_cycle_t *cycle);
+
 static ngx_int_t ngx_epoll_add_event(ngx_event_t *ev, ngx_int_t event,
     ngx_uint_t flags);
 static ngx_int_t ngx_epoll_del_event(ngx_event_t *ev, ngx_int_t event,
@@ -106,11 +108,15 @@ static void ngx_epoll_eventfd_handler(ngx_event_t *ev);
 #endif
 
 static void *ngx_epoll_create_conf(ngx_cycle_t *cycle);
+
 static char *ngx_epoll_init_conf(ngx_cycle_t *cycle, void *conf);
 
 static int                  ep = -1;
+
 static struct epoll_event  *event_list;
+
 static ngx_uint_t           nevents;
+
 
 #if (NGX_HAVE_FILE_AIO)
 
@@ -126,11 +132,17 @@ static ngx_str_t      epoll_name = ngx_string("epoll");
 
 static ngx_command_t  ngx_epoll_commands[] = {
 
-    { ngx_string("epoll_events"),
+    {
+      ngx_string("epoll_events"),
+
       NGX_EVENT_CONF|NGX_CONF_TAKE1,
+
       ngx_conf_set_num_slot,
+
       0,
+
       offsetof(ngx_epoll_conf_t, events),
+
       NULL },
 
       ngx_null_command
@@ -215,7 +227,7 @@ ngx_epoll_init(ngx_cycle_t *cycle, ngx_msec_t timer)
 
     epcf = ngx_event_get_conf(cycle->conf_ctx, ngx_epoll_module);
 
-    if (ep == -1) {
+    if (ep == -1) {  //ep 没有初始化
         ep = epoll_create(cycle->connection_n / 2);
 
         if (ep == -1) {
@@ -278,9 +290,9 @@ ngx_epoll_init(ngx_cycle_t *cycle, ngx_msec_t timer)
         if (event_list) {
             ngx_free(event_list);
         }
-
+        // 返回events数目的event
         event_list = ngx_alloc(sizeof(struct epoll_event) * epcf->events,
-                               cycle->log);
+                               cycle->log); // 写到log
         if (event_list == NULL) {
             return NGX_ERROR;
         }
@@ -532,13 +544,13 @@ ngx_epoll_process_events(ngx_cycle_t *cycle, ngx_msec_t timer, ngx_uint_t flags)
     err = (events == -1) ? ngx_errno : 0;
 
     if (flags & NGX_UPDATE_TIME || ngx_event_timer_alarm) {
-        ngx_time_update();
+        ngx_time_update(); // 更新定时器
     }
 
     if (err) {
-        if (err == NGX_EINTR) {
+        if (err == NGX_EINTR) {//
 
-            if (ngx_event_timer_alarm) {
+            if (ngx_event_timer_alarm) {//
                 ngx_event_timer_alarm = 0;
                 return NGX_OK;
             }

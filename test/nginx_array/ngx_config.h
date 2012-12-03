@@ -7,6 +7,7 @@
 #ifndef _NGX_CONFIG_H_INCLUDED_
 #define _NGX_CONFIG_H_INCLUDED_
 
+#define NGX_LINUX 1
 
 #include <ngx_auto_headers.h>
 
@@ -79,7 +80,7 @@
 typedef intptr_t        ngx_int_t;
 typedef uintptr_t       ngx_uint_t;
 typedef intptr_t        ngx_flag_t;
-
+typedef int                      ngx_fd_t;
 
 #define NGX_INT32_LEN   sizeof("-2147483648") - 1
 #define NGX_INT64_LEN   sizeof("-9223372036854775808") - 1
@@ -129,5 +130,8 @@ typedef intptr_t        ngx_flag_t;
 #define NGX_MAX_UINT32_VALUE  (uint32_t) 0xffffffff
 #endif
 
+#define ngx_log_debug1(a,b,c,d,e)
+#define ngx_log_debug2(a,b,c,d,e,f)
+#define ngx_log_error ngx_log_debug1
 
 #endif /* _NGX_CONFIG_H_INCLUDED_ */

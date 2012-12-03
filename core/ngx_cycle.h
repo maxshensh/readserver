@@ -34,36 +34,36 @@ struct ngx_shm_zone_s {
 
 
 struct ngx_cycle_s {
-    void                  ****conf_ctx;
+    void                  ****conf_ctx; //
     ngx_pool_t               *pool;
 
     ngx_log_t                *log;
     ngx_log_t                 new_log;
 
     ngx_connection_t        **files;
-    ngx_connection_t         *free_connections;
-    ngx_uint_t                free_connection_n;
+    ngx_connection_t         *free_connections; //可用连接
+    ngx_uint_t                free_connection_n; //可用连接数
 
-    ngx_array_t               listening;
-    ngx_array_t               pathes;
-    ngx_list_t                open_files;
-    ngx_list_t                shared_memory;
+    ngx_array_t               listening; //一个listen array
+    ngx_array_t               pathes;      //路径
+    ngx_list_t                open_files;   //open 文件
+    ngx_list_t                shared_memory; //
 
-    ngx_uint_t                connection_n;
-    ngx_uint_t                files_n;
+    ngx_uint_t                connection_n;//连接数目
+    ngx_uint_t                files_n; //文件数目
 
-    ngx_connection_t         *connections;
-    ngx_event_t              *read_events;
-    ngx_event_t              *write_events;
+    ngx_connection_t         *connections;  //连接
+    ngx_event_t              *read_events;  //读
+    ngx_event_t              *write_events; //写
 
-    ngx_cycle_t              *old_cycle;
+    ngx_cycle_t              *old_cycle;  //
 
-    ngx_str_t                 conf_file;
-    ngx_str_t                 conf_param;
-    ngx_str_t                 conf_prefix;
-    ngx_str_t                 prefix;
-    ngx_str_t                 lock_file;
-    ngx_str_t                 hostname;
+    ngx_str_t                 conf_file; //配置文件
+    ngx_str_t                 conf_param;//配置参数
+    ngx_str_t                 conf_prefix; //配置前缀
+    ngx_str_t                 prefix;  //前缀
+    ngx_str_t                 lock_file; //文件
+    ngx_str_t                 hostname; //主机名
 };
 
 
