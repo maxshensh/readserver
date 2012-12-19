@@ -19,12 +19,13 @@
  * On Windows NT it decreases a number of locked pages in a kernel.
  */
 
-#define ngx_pagesize getpagesize()(4*1024)
+#define ngx_pagesize (4*1024)
 // 最大可以alloc 的大小 4k-1
 #define NGX_MAX_ALLOC_FROM_POOL  (ngx_pagesize - 1)
 
 // pool的大小
 #define NGX_DEFAULT_POOL_SIZE    (16 * 1024)
+
 //以16字节为大小对齐
 #define NGX_POOL_ALIGNMENT       16
 
@@ -83,25 +84,37 @@ typedef struct {
     ngx_log_t            *log;//日志
 } ngx_pool_cleanup_file_t;
 
-
+//alloc
 void *ngx_alloc(size_t size, ngx_log_t *log);
+//calloc
 void *ngx_calloc(size_t size, ngx_log_t *log);
 
+//创建一个pool
 ngx_pool_t *ngx_create_pool(size_t size, ngx_log_t *log);
+//销毁一个pool
 void ngx_destroy_pool(ngx_pool_t *pool);
+//reset
 void ngx_reset_pool(ngx_pool_t *pool);
 
 //void *ngx_palloc(ngx_pool_t *pool, size_t size);
 
+//alooc
 void *ngx_pnalloc(ngx_pool_t *pool, size_t size);
+//pcalloc
 void *ngx_pcalloc(ngx_pool_t *pool, size_t size);
+//??
 void *ngx_pmemalign(ngx_pool_t *pool, size_t size, size_t alignment);
+
+//free
 ngx_int_t ngx_pfree(ngx_pool_t *pool, void *p);
 
 
 ngx_pool_cleanup_t *ngx_pool_cleanup_add(ngx_pool_t *p, size_t size);
+
 void ngx_pool_run_cleanup_file(ngx_pool_t *p, ngx_fd_t fd);
+
 void ngx_pool_cleanup_file(void *data);
+
 void ngx_pool_delete_file(void *data);
 
 

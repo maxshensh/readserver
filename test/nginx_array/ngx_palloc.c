@@ -8,7 +8,9 @@
 #include <ngx_core.h>
 #include <ngx_palloc.h>
 
+
 static void *ngx_palloc_block(ngx_pool_t *pool, size_t size);
+
 static void *ngx_palloc_large(ngx_pool_t *pool, size_t size);
 
 
@@ -19,17 +21,28 @@ ngx_create_pool(size_t size, ngx_log_t *log)
 
     p = ngx_memalign(NGX_POOL_ALIGNMENT, size, log);
     if (p == NULL) {
-        return NULL;
+    	//alloc 失败
+    	return NULL;
     }
 
+    // d.lat 指向pool 后面的一个位置
+    //其实就是真是data的开始
     p->d.last = (u_char *) p + sizeof(ngx_pool_t);
+    // 尾巴指针
     p->d.end = (u_char *) p + size;
+    //next==null
     p->d.next = NULL;
+    //failed = 0
     p->d.failed = 0;
 
+    //可用的空间  就是申请的空间 减去 pool 头
     size = size - sizeof(ngx_pool_t);
+    //max size 和 NGX_MAX_ALLOC_FROM_POOL 比较
+    // 那个小 就是一次可以分配的最大空间
+
     p->max = (size < NGX_MAX_ALLOC_FROM_POOL) ? size : NGX_MAX_ALLOC_FROM_POOL;
 
+    //
     p->current = p;
     p->chain = NULL;
     p->large = NULL;
@@ -47,6 +60,7 @@ ngx_destroy_pool(ngx_pool_t *pool)
     ngx_pool_large_t    *l;
     ngx_pool_cleanup_t  *c;
 
+    // clean
     for (c = pool->cleanup; c; c = c->next) {
         if (c->handler) {
             ngx_log_debug1(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
@@ -54,6 +68,7 @@ ngx_destroy_pool(ngx_pool_t *pool)
             c->handler(c->data);
         }
     }
+    // 把large的clean掉
 
     for (l = pool->large; l; l = l->next) {
 
@@ -64,6 +79,7 @@ ngx_destroy_pool(ngx_pool_t *pool)
         }
     }
 
+
 #if (NGX_DEBUG)
 
     /*
@@ -71,6 +87,7 @@ ngx_destroy_pool(ngx_pool_t *pool)
      * so we can not use this log while the free()ing the pool
      */
 
+    // 有debug的话
     for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
         ngx_log_debug2(NGX_LOG_DEBUG_ALLOC, pool->log, 0,
                        "free: %p, unused: %uz", p, p->d.end - p->d.last);
@@ -82,6 +99,7 @@ ngx_destroy_pool(ngx_pool_t *pool)
 
 #endif
 
+    // 将链表遍历完
     for (p = pool, n = pool->d.next; /* void */; p = n, n = n->d.next) {
         ngx_free(p);
 
@@ -98,6 +116,8 @@ ngx_reset_pool(ngx_pool_t *pool)
     ngx_pool_t        *p;
     ngx_pool_large_t  *l;
 
+    // 把large 都free掉
+
     for (l = pool->large; l; l = l->next) {
         if (l->alloc) {
             ngx_free(l->alloc);
@@ -105,6 +125,7 @@ ngx_reset_pool(ngx_pool_t *pool)
     }
 
     pool->large = NULL;
+
 
     for (p = pool; p; p = p->d.next) {
         p->d.last = (u_char *) p + sizeof(ngx_pool_t);
@@ -117,7 +138,7 @@ ngx_palloc(ngx_pool_t *pool, size_t size)
 {
     u_char      *m;
     ngx_pool_t  *p;
-
+    //如果申请的size比现在的小
     if (size <= pool->max) {
 
         p = pool->current;
@@ -437,6 +458,8 @@ void *
 ngx_alloc(size_t size, ngx_log_t *log)
 {
     void  *p;
+
+    // 如果alloc失败
 
     p = malloc(size);
     if (p == NULL) {
